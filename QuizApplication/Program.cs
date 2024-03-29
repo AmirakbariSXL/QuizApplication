@@ -1,4 +1,5 @@
-﻿using System;
+
+using System;
 using System.Collections.Generic;
 
 namespace QuizApplication
@@ -35,8 +36,8 @@ namespace QuizApplication
 
     public class Question
     {
-        public string Text { get; }
-        public string Answer { get; }
+        public string Text { get; set; }
+        public string Answer { get; set; }
 
         public Question(string text, string answer)
         {
@@ -49,99 +50,86 @@ namespace QuizApplication
     {
         static List<Question> questions = new List<Question>
         {
-        new Question("What is the capital of France?", "Paris"),
+            // Default questions
+                new Question("What is the capital of France?", "Paris"),
                 new Question("Who wrote 'Hamlet'?", "Shakespeare"),
                 new Question("What is the chemical symbol for water?", "H2O"),
                 new Question ("Who wrote the book Chitty-Chitty-Bang-Bang: The Magical Car?","Ian Fleming"),
                 new Question("In which part of your body would you find the cruciate ligament?","Knee"),
                 new Question("What is the name of the main antagonist in the Shakespeare play Othello?","Iago"),
-        };
+          };
 
-        static void Main(string[] args)
+
+
+        class Main_program
         {
-            Console.WriteLine("Welcome to the Quiz Application!");
-            Console.WriteLine("Please register or login to continue.");
 
-            while (true)
 
-                break
+            static void Main(string[] args)
             {
-                Console.WriteLine("Choose an option: [1] Register [2] Login");
-                string option = Console.ReadLine();
+                Console.WriteLine("Welcome to the Quiz Application!");
+                bool exitApp = false;
 
-                switch (option)
+                while (!exitApp)
                 {
-                    case "1":
-                        Console.WriteLine("Enter username:");
-                        string newUsername = Console.ReadLine();
-                        Console.WriteLine("Enter password:");
-                        string newPassword = Console.ReadLine();
+                    Console.WriteLine("Please register or login to continue.");
+                    // Registration and login logic...
 
-                        var newUser = new User { Username = newUsername, Password = newPassword };
-                        bool registrationSuccess = UserDatabase.Register(newUser);
+                    Console.WriteLine("Would you like to [1] Take the quiz, [2] Add your own question, or [3] Exit?");
+                    string choice = Console.ReadLine();
 
-                        if (registrationSuccess)
-                        {
-                            Console.WriteLine("Registration successful!");
+                    switch (choice)
+                    {
+                        case "1":
                             StartQuiz();
-                        }
-                        else
-                        {
-                            Console.WriteLine("Username already exists. Please try a different username.");
-                        }
-                        break;
-
-                    case "2":
-                        Console.WriteLine("Enter username:");
-                        string username = Console.ReadLine();
-                        Console.WriteLine("Enter password:");
-                        string password = Console.ReadLine();
-
-                        bool loginSuccess = UserDatabase.Login(username, password);
-
-                        if (loginSuccess)
-                        {
-                            Console.WriteLine("Login successful!");
-                            StartQuiz();
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid username or password.");
-                        }
-                        break;
-
-                    default:
-                        Console.WriteLine("Invalid option. Please try again.");
-                        break;
-                }
-            }
-        }
-
-        static void StartQuiz()
-        {
-            int score = 0;
-            foreach (var question in questions)
-            {
-                Console.WriteLine(question.Text);
-                /*
-     Text: A public property that holds the text of the quiz question.
-     Answer: A public property that holds the answer to the quiz question.
-     */
-                string answer = Console.ReadLine();
-
-                if (answer.Equals(question.Answer, StringComparison.OrdinalIgnoreCase))
-                {
-                    Console.WriteLine("Correct!");
-                    score++;
-                }
-                else
-                {
-                    Console.WriteLine($"Wrong! The correct answer is {question.Answer}.");
+                            break;
+                        case "2":
+                            AddQuestion();
+                            break;
+                        case "3":
+                            Console.WriteLine("Thank you for using the Quiz Application. Goodbye!");
+                            exitApp = true;
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option. Please try again.");
+                            break;
+                    }
                 }
             }
 
-            Console.WriteLine($"Quiz completed! Your score: {score}/{questions.Count}");
+            static void StartQuiz()
+            {
+                int score = 0;
+                foreach (var question in questions)
+                {
+                    Console.WriteLine(question.Text);
+                    string answer = Console.ReadLine();
+
+                    if (answer.Equals(question.Answer, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine("Correct!");
+                        score++;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Wrong! The correct answer is {question.Answer}.");
+                    }
+                }
+
+                Console.WriteLine($"Quiz completed! Your score: {score}/{questions.Count}");
+            }
+
+            static void AddQuestion()
+            {
+                Console.WriteLine("Enter your question:");
+                string userQuestion = Console.ReadLine();
+                Console.WriteLine("Enter the answer:");
+                string userAnswer = Console.ReadLine();
+
+                questions.Add(new Question(userQuestion, userAnswer));
+                Console.WriteLine("Your question has been added. Thank you!");
+            }
         }
+
     }
 }
-
